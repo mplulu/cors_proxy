@@ -36,6 +36,8 @@ func main() {
 func serveCORSProxy(c echo.Context) error {
 	method := c.Request().Method
 	url := c.QueryParam("url")
+
+	log.Log("proxy for url %v", url)
 	body := c.Request().Body
 	request, err := http.NewRequest(method, url, body)
 	if err != nil {
@@ -52,6 +54,7 @@ func serveCORSProxy(c echo.Context) error {
 		return errors.New(fmt.Sprintf("HTTP Request Read Content Error %v", err))
 	}
 	readSeeker := bytes.NewReader(content)
+	log.Log("serve content %v", string(content))
 	http.ServeContent(c.Response(), c.Request(), "", time.Now(), readSeeker)
 	return nil
 }
